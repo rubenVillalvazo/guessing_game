@@ -6,7 +6,6 @@ fn game() {
     println!("GUESS THE NUMBER!");
 
     let secret_number = rand::thread_rng().gen_range(1..=100);
-    println!("{secret_number}");
 
     'game_loop: loop {
         println!("Input your guess: ");
