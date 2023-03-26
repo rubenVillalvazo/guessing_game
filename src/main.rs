@@ -38,7 +38,8 @@ fn game() {
                     if user_answer == "n" || user_answer == "no" {
                         break 'game_loop;
                     } else if user_answer == "y" || user_answer == "yes" {
-                        break game();
+                        game();
+                        break 'game_loop;
                     } else {
                         println!("Please enter a valid answer.");
                         println!("Would you like to play again? (Y/N)");
