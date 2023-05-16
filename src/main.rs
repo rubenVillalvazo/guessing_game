@@ -13,13 +13,18 @@ fn game() {
         io::stdin()
             .read_line(&mut user_guess)
             .expect("Failed to read line");
-        let user_guess: u32 = match user_guess.trim().parse() {
+        let user_guess: i32 = match user_guess.trim().parse() {
             Ok(num) => num,
             Err(_) => {
                 println!("Please type a number!");
                 continue;
             }
         };
+
+        if user_guess < 1 || user_guess > 100 {
+            println!("The secret number will be between 1 and 100.");
+            continue;
+        }
 
         match user_guess.cmp(&secret_number) {
             Ordering::Less => println!("To small!"),
