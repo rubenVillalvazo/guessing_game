@@ -13,7 +13,7 @@ fn game() {
         io::stdin()
             .read_line(&mut user_guess)
             .expect("Failed to read line");
-        let user_guess: u32 = match user_guess.trim().parse() {
+        let user_guess: i32 = match user_guess.trim().parse() {
             Ok(num) => num,
             Err(_) => {
                 println!("Please type a number!");
