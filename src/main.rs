@@ -21,6 +21,11 @@ fn game() {
             }
         };
 
+        if user_guess < 1 || user_guess > 100 {
+            println!("The secret number will be between 1 and 100.");
+            continue;
+        }
+
         match user_guess.cmp(&secret_number) {
             Ordering::Less => println!("To small!"),
             Ordering::Greater => println!("To big!"),
