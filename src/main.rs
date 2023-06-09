@@ -2,6 +2,14 @@ use rand::Rng;
 use std::cmp::Ordering;
 use std::io;
 
+fn user_input() -> String {
+    let mut user_input: String = String::new();
+    io::stdin()
+        .read_line(&mut user_input)
+        .expect("Failed to read line");
+    return user_input;
+}
+
 fn game() {
     println!("GUESS THE NUMBER!");
 
@@ -9,11 +17,7 @@ fn game() {
 
     'game_loop: loop {
         println!("Input your guess: ");
-        let mut user_guess = String::new();
-        io::stdin()
-            .read_line(&mut user_guess)
-            .expect("Failed to read line");
-        let user_guess: i32 = match user_guess.trim().parse() {
+        let user_guess: i32 = match user_input().trim().parse() {
             Ok(num) => num,
             Err(_) => {
                 println!("Please type a number!");
@@ -34,11 +38,7 @@ fn game() {
                 println!("Would you like to play again? (Y/N)");
 
                 loop {
-                    let mut user_answer = String::new();
-                    io::stdin()
-                        .read_line(&mut user_answer)
-                        .expect("Failed to read line");
-                    let user_answer = user_answer.trim().to_lowercase();
+                    let user_answer = user_input().trim().to_lowercase();
                     if user_answer == "n" || user_answer == "no" {
                         break 'game_loop;
                     } else if user_answer == "y" || user_answer == "yes" {
