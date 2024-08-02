@@ -42,19 +42,19 @@ enum InputType {
 fn user_input(input_type: InputType) -> String {
     match input_type {
         InputType::Guess => {
-            println!("Input your guess: ");
+            println!("🤔 ¿Cuál es tu conjetura?");
         }
         InputType::PlayAgain => {
-            println!("Would you like to play again? (Y/N)");
+            println!("¿Quieres jugar otra vez? (Y/N)");
         }
         InputType::SelectDifficulty => {
-            println!("Select Difficulty (easy/hard): ");
+            println!("Selecciona la dificultad: fácil o difícil (easy/hard): ");
         }
     }
     let mut user_input: String = String::new();
     io::stdin()
         .read_line(&mut user_input)
-        .expect("Failed to read line");
+        .expect("¡Falló al leer la línea!");
     return user_input;
 }
 
@@ -66,49 +66,54 @@ fn select_difficulty() -> Difficulty {
         match difficulty.as_str() {
             "easy" => return Difficulty::Easy,
             "hard" => return Difficulty::Hard,
-            _ => println!("Please enter a valid difficulty (easy/hard)."),
+            _ => println!("Por favor, elige una dificultad válida: fácil o difícil (easy/hard)."),
         }
     }
 }
 
 fn game() {
     'game_loop: loop {
-        println!("GUESS THE NUMBER!");
+        println!("🎉 ¡BIENVENIDO A ADIVINA EL NÚMERO! 🎉");
 
         let difficulty = select_difficulty();
         let game = Game::new(difficulty);
         let mut attempts = 0;
 
+        println!(
+            "🤖 Estoy pensando en un número entre {} y {}. ¿Puedes adivinar cuál es? ¡Tienes {} intentos!",
+            game.min_number, game.max_number, game.max_attempts
+        );
+
         'guess_loop: loop {
             if attempts >= game.max_attempts {
-                println!(
-                    "You've reached the maximum number of attempts! The number was {}.",
-                    game.secret_number
-                );
+                println!("❌ ¡Oh no! Has alcanzado el máximo de intentos. El número era {}. ¡Mejor suerte la próxima vez!", game.secret_number);
                 break 'guess_loop;
             }
 
             let user_guess: i32 = match user_input(InputType::Guess).trim().parse() {
                 Ok(num) => num,
                 Err(_) => {
-                    println!("Please type a number!");
+                    println!("🚫 ¡Eso no es un número válido! Inténtalo de nuevo.");
                     continue 'guess_loop;
                 }
             };
 
             if user_guess < game.min_number || user_guess > game.max_number {
                 println!(
-                    "The secret number will be between {} and {}.",
+                    "🚧 Recuerda, el número está entre {} y {}.",
                     game.min_number, game.max_number
                 );
                 continue 'guess_loop;
             }
 
             match user_guess.cmp(&game.secret_number) {
-                Ordering::Less => println!("Too small!"),
-                Ordering::Greater => println!("Too big!"),
+                Ordering::Less => println!("🔻 ¡Demasiado bajo! Intenta un número mayor."),
+                Ordering::Greater => println!("🔺 ¡Demasiado alto! Intenta un número menor."),
                 Ordering::Equal => {
-                    println!("You win!");
+                    println!(
+                        "🎉 ¡Felicidades! ¡Has adivinado el número {}!",
+                        game.secret_number
+                    );
                     break 'guess_loop;
                 }
             }
@@ -118,11 +123,13 @@ fn game() {
         'play_again_loop: loop {
             let user_answer = user_input(InputType::PlayAgain).trim().to_lowercase();
             if user_answer == "n" || user_answer == "no" {
+                println!("👋 ¡Gracias por jugar! ¡Hasta la próxima!");
                 break 'game_loop;
             } else if user_answer == "y" || user_answer == "yes" {
+                println!("🔄 ¡Genial! Preparando un nuevo juego...");
                 break 'play_again_loop;
             } else {
-                println!("Please enter a valid answer.");
+                println!("❓ Respuesta no válida. Por favor, responde con 'Y' (sí) o 'N' (no).");
             }
         }
     }
