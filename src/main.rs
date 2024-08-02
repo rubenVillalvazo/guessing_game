@@ -24,23 +24,23 @@ fn user_input(input_type: InputType) -> String {
 }
 
 fn game() {
-    loop {
+    'game_loop: loop {
         println!("GUESS THE NUMBER!");
 
         let secret_number = rand::thread_rng().gen_range(1..=100);
 
-        loop {
+        'guess_loop: loop {
             let user_guess: i32 = match user_input(InputType::Guess).trim().parse() {
                 Ok(num) => num,
                 Err(_) => {
                     println!("Please type a number!");
-                    continue;
+                    continue 'guess_loop;
                 }
             };
 
             if user_guess < 1 || user_guess > 100 {
                 println!("The secret number will be between 1 and 100.");
-                continue;
+                continue 'guess_loop;
             }
 
             match user_guess.cmp(&secret_number) {
@@ -48,17 +48,17 @@ fn game() {
                 Ordering::Greater => println!("Too big!"),
                 Ordering::Equal => {
                     println!("You win!");
-                    break;
+                    break 'guess_loop;
                 }
             }
         }
 
-        loop {
+        'play_again_loop: loop {
             let user_answer = user_input(InputType::PlayAgain).trim().to_lowercase();
             if user_answer == "n" || user_answer == "no" {
-                return;
+                break 'game_loop;
             } else if user_answer == "y" || user_answer == "yes" {
-                break;
+                break 'play_again_loop;
             } else {
                 println!("Please enter a valid answer.");
             }
